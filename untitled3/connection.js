@@ -16,5 +16,5 @@ exports.array=result;
 
 });
 
-
+L.marker(latlng).addTo(map).bindPopup(feature.properties.name);
     con.end();*/

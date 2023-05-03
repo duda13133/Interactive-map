@@ -10,7 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
     <script src="lrm-graphhopper-1.2.0.js"></script>
     <script src="jquery-3.6.4.js"></script>
-    <script src="node_modules/requirejs/require.js"></script>
     <link rel="stylesheet" href="style.css">
 
     <style>
@@ -29,7 +28,18 @@ $dbname = "test";
 $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 $result = mysqli_query($conn, $sql);
 if ($result->num_rows > 0) {
-    echo "<select name='text'>";
+    echo "<select id='ddlViewBy'>";
+    while ($text = mysqli_fetch_array($result)) {
+        echo '
+    <option value="">' . $text['text'] . ' 
+    </option>';
+
+    }
+}
+echo "</select>";
+$result = mysqli_query($conn, $sql);
+if ($result->num_rows > 0) {
+    echo "<select id='ddlViewBy2'>";
     while ($text = mysqli_fetch_array($result)) {
         echo '
     <option value="">' . $text['text'] . '
@@ -68,6 +78,7 @@ fclose($fp);
 
 mysqli_close($conn);
 ?>
+<button onclick="myFunction()">Click me</button>
 <div id="map"></div>
 <script src="maps.js"></script>
 </body>

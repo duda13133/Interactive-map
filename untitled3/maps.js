@@ -5,37 +5,55 @@
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    let control = L.Routing.control({
-        waypoints: [
-            L.latLng(50.01215391837907, 22.67382592243829),
-            L.latLng(50.01215391837907, 22.67382592243828)
-        ],
-        language: 'pl',
-        routeWhileDragging: true,
-        showAlternatives: true,
-        router: L.Routing.graphHopper('f9f9870f-3d9d-41f1-8124-e3f93eb2e4fb', {
-            urlParameters: {
-                vehicle: 'foot'
-            }
-        })
-
-    }).addTo(map);
-
-        $.ajax({
-            url: 'map.geojson',
-            dataType: 'json',
-            success: function (data) {
-                console.log("Dane załadowane pomyślnie")
-                L.geoJSON(data, {
-                    onEachFeature: function (feature, layer) {
-                        var latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
-                        L.marker(latlng).addTo(map).bindPopup('ID: ' + feature.properties.id + '<br>Nazwa: ' + feature.properties.text);
-                    }
-                }).addTo(map)
-            }
-        });
 
 
+
+
+    let e = document.getElementById("ddlViewBy");
+    function onChange() {
+        var text1 = e.options[e.selectedIndex].text;
+    }
+    e.onchange = onChange;
+
+
+    let e2 = document.getElementById("ddlViewBy2");
+    function onChange2() {
+        var text2 = e2.options[e2.selectedIndex].text;
+    }
+    e2.onchange = onChange2;
+
+function myFunction(){
+    $.ajax({
+        url: 'map.geojson',
+        dataType: 'json',
+        success: function (data) {
+            console.log("Dane załadowane pomyślnie")
+            var marker1 = L.marker([data.features[e.selectedIndex].geometry.coordinates[0], data.features[e.selectedIndex].geometry.coordinates[1]]).addTo(map).bindPopup(e.options[e.selectedIndex].text);
+            var marker2 = L.marker([data.features[e2.selectedIndex].geometry.coordinates[0], data.features[e2.selectedIndex].geometry.coordinates[1]]).addTo(map).bindPopup(e2.options[e2.selectedIndex].text);
+            L.geoJSON(data, {
+                onEachFeature: function (feature, layer) {
+                    let control = L.Routing.control({
+                        waypoints: [([data.features[e.selectedIndex].geometry.coordinates[0], data.features[e.selectedIndex].geometry.coordinates[1]]),
+                            ([data.features[e2.selectedIndex].geometry.coordinates[0], data.features[e2.selectedIndex].geometry.coordinates[1]])
+                        ],
+                        language: 'pl',
+                        routeWhileDragging: true,
+                        showAlternatives: true,
+                        router: L.Routing.graphHopper('f9f9870f-3d9d-41f1-8124-e3f93eb2e4fb', {
+                            urlParameters: {
+                                vehicle: 'foot'
+                            }
+                        })
+
+                    }).addTo(map);
+
+
+                }
+            }).addTo(map);
+        }
+    });
+
+}
     /*  var marker0 = L.marker([50.01219063711836, 22.673130251877655]).addTo(map).bindPopup("<b>Instytut Inzynierii Technicznej</b>");
 
       var marker1 = L.marker([50.0119310305093, 22.67394389678122]).addTo(map).bindPopup("<b>Biblioteka</b><br>I am a popup.");
